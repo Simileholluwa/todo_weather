@@ -1,16 +1,16 @@
-# todo_weather
+# TodoWeather
 
-A new Flutter project.
+Task by [Optimus AI Labs](https://optimusai.ai) 
 
-## Getting Started
+## App architecture
+- State management - Riverpod
+- Local storage - Hive and Shared Preferences
 
-This project is a starting point for a Flutter application.
+## App features
+- Add a new task 
+- Display list of all tasks
+- Refresh to fetch new weather data for all tasks
+- Delete a task for the list of tasks
+- Switch between light and dark mode
+- Environment variables are hidden using dotenv
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.

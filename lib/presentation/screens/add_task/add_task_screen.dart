@@ -18,12 +18,16 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
   final _titleController = TextEditingController();
   final _cityController = TextEditingController();
   bool _isLoading = false;
+  final _formKey = GlobalKey<FormState>();
 
   Future<void> _addTask() async {
     setState(
       () => _isLoading = true,
     );
     final apiService = WeatherApiService(Env.weatherApiKey);
+    if (_cityController.text.isEmpty || _titleController.text.isEmpty) {
+      return;
+    }
     try {
       final WeatherModel weather = await apiService.fetchWeather(
         _cityController.text.trim(),
@@ -74,32 +78,67 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _titleController,
-              decoration: const InputDecoration(
-                labelText: 'Title',
+        child: Form(
+          key: _formKey,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          child: Column(
+            children: [
+              TextFormField(
+                controller: _titleController,
+                decoration: const InputDecoration(
+                  labelText: 'Title',
+                ),
+                textCapitalization: TextCapitalization.sentences,
+                validator: (value) {
+                  if (value == null) {
+                    return 'Title is required';
+                  } else if (value.isEmpty) {
+                    return 'Title is required';
+                  } else {
+                    return null;
+                  }
+                },
               ),
-            ),
-            TextField(
-              controller: _cityController,
-              decoration: const InputDecoration(
-                labelText: 'City',
+              TextFormField(
+                controller: _cityController,
+                decoration: const InputDecoration(
+                  labelText: 'City',
+                ),
+                textCapitalization: TextCapitalization.sentences,
+                validator: (value) {
+                  if (value == null) {
+                    return 'City is required';
+                  } else if (value.isEmpty) {
+                    return 'City is required';
+                  } else {
+                    return null;
+                  }
+                },
               ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            _isLoading
-                ? const CircularProgressIndicator()
-                : ElevatedButton(
-                    onPressed: _addTask,
-                    child: const Text(
-                      'Add Task',
-                    ),
-                  ),
-          ],
+              const SizedBox(
+                height: 20,
+              ),
+              ElevatedButton(
+                onPressed: _isLoading
+                    ? null
+                    : () {
+                        final isValid = _formKey.currentState!.validate();
+                        if (isValid) {
+                          _addTask();
+                        }
+                      },
+                child: _isLoading
+                    ? SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(),
+                      )
+                    : const Text(
+                        'Add Task',
+                      ),
+              ),
+            ],
+          ),
         ),
       ),
     );
